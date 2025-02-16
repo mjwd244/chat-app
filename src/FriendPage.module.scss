@@ -1,0 +1,158 @@
+body {
+ 
+}
+
+.friendPage {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100vw;
+  height: 100vh;
+  gap: 50px;
+  background-image: url('../public/images/pexels-felixmittermeier-956999.jpg');
+  background-size: cover;
+  background-attachment: fixed;
+  overflow-y: auto; 
+  overflow-x: hidden; 
+  box-sizing: border-box; 
+}
+
+.mainuserr {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: flex-start;
+  justify-content: space-between;
+  background-image: url('../public/images/pexels-gdtography-277628-911738.jpg');
+  background-size: contain;
+}
+
+.leftsider {
+  flex: 1;
+  height: 201px;
+}
+
+.usercon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  height: auto;
+  flex: 1;
+  gap: 20px;
+}
+
+.imgname {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 60px;
+}
+
+.imgname img {
+  margin-top: 20px;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+}
+
+.imgname p {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: black;
+}
+
+.buttonscontainer {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 3px;
+  gap: 20px;
+}
+
+.buttonscontainer button {
+  flex: 1;
+  font-size: 14px;
+  height: 20px;
+  background-color: aquamarine;
+  width: 100px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  min-width: 120px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.rightsider {
+  flex: 1;
+  height: 201px;
+}
+
+.friendcontent {
+  display: flex;
+  flex-direction: column;
+  width: calc(100vw - 17px);  
+  gap: 10px;
+
+}
+
+.infoContent {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: auto;
+  border: red solid 1px;
+  background-color: lightblue;
+}
+
+.name {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: 10px;
+}
+
+.name img {
+  width: 100px;
+  height: 100px;
+  border-radius: 20px;
+}
+
+.name p {
+  margin-bottom: 30px;
+}
+
+.name strong {
+  font-size: 14px;
+  font-weight: normal;
+  margin-left: -123px;
+  margin-top: 20px;
+}
+
+.removeandview {
+  display: flex;
+  gap: 10px;
+  margin-right: 10px;
+}
+
+.removeandview button {
+  flex: 1;
+  padding: 1px 1px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+  min-width: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: aqua;
+  height: 30px;
+}

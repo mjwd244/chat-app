@@ -1,0 +1,189 @@
+img{
+    width: 20px;
+    height:20px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin:0;
+    padding:0;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+.buttonaddgroupParticipants{
+    width: auto;
+    height: auto;
+    padding: 5px;
+    background-color: greenyellow;
+}
+.bottomdiv{
+    justify-self: center;
+}
+.header {
+    order:2;
+}
+.closeButton { 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border-radius: 10px;
+    background-color: aliceblue;
+    height: 10px;
+    width: 10px;
+    cursor: pointer; /* Opti onal: to indicate it's clickable */
+    background-color: black;
+    font-size: 13px;
+}
+.container{
+    display: flex;  
+    height: calc(100% - 70px);
+    flex-direction: column;
+    font-size: 13px;
+    justify-content: flex-start;
+}
+.closebuttonHolder{
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+    margin-left: 10px;
+    margin-top: 10px;;
+}
+.startdiv{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height:100%;
+    gap: 20px;
+}
+.groupContainer {  
+    display: flex;
+ 
+    flex-direction: column;
+  
+   width: 100%;
+    height: calc(100% );
+    gap:20px; 
+}
+.friendsJoinedContainer {
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: center;
+    height: 5%;
+}
+.friendsJoinedContainer h2 {
+    font-size: 13px;
+    color:red;
+    padding:0;
+    margin:0;
+}
+
+
+.messageswholecontainer{
+    width: 100%;
+    height: 75%;
+    
+   
+}
+
+.messagegroup{
+    display: flex;
+    padding: 10px; /* Add padding to the message container */
+    max-height: 400px; /* Set a maximum height for the container */
+    overflow-y: auto; /* Enable vertical scrolling */
+    gap:10px;
+    border-radius: 5px; /* Optional: Add rounded corners */
+    margin-bottom: 8px;
+    align-items: center;
+}
+.owner {
+    flex-direction: row-reverse;
+    background-color: lightgray;
+    border-radius: 10px;
+}
+
+
+.notowner {
+
+    border-radius: 10px;
+}
+
+
+.messagegroupInfo{
+
+width: 60px;
+text-align: center;
+
+}
+
+.messagegroupInfo img {
+    width: 40px; /* Set a fixed width for the images */
+  height: 40px; /* Set a fixed height for the images */
+  border-radius: 50%; /* Make the images circular */
+  object-fit: cover; /* Ensure the image covers the area without distortion */
+  display: block; /* Make the image a block element */
+  margin: 0 auto;
+}
+
+.messagegroupInfo p {
+    font-size: 14px; /* Set a consistent font size for the text */
+    margin: 5px 0 0 0;
+    display: block; /* Align the text next to the image */
+    max-width: 100%; /* Ensure text does not exceed the container width */
+  white-space: nowrap; /* Prevent text from wrapping */
+  text-overflow: ellipsis; 
+}
+
+
+.messagegroupContent {
+    font-size: 13px;
+    display: flex; /* Use flexbox to align items */
+
+    text-wrap: nowrap;
+}
+
+.messagegroupContent p {
+    font-size: 13px;
+}
+
+.messagegroupContent img {
+    font-size: 13px;
+}
+
+.messagegroupContent .text  {
+    display: inline;
+    margin-right: 10px;
+    
+}
+.messagegroupContent .timelinne  {
+    display: inline;
+   
+}
+
+
+
+
+
+.inputDiv{
+    display: flex;
+    width: 100%; 
+    margin-top: 10px; /* Add some spacing above */
+    height: 15%;
+
+}
+
+.inputDiv input{
+    width: 100%;
+    padding: 5px 5px; /* Add comfortable padding */
+    border: 1px solid gray; /* Add a subtle border */
+    border-radius: 10px; /* Round the corners */
+    font-size: 16px; /* Adjust font size */ 
+    outline: none; /* Remove default outline on focus */
+}
+
+  
+
+
+ 

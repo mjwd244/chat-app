@@ -1,0 +1,661 @@
+
+
+.styles.wholecontainer{
+    max-width: 100vw;
+    max-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x:hidden;
+    font-size: 14px;
+}
+.maincontainer{
+    margin: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 12px;
+}
+
+.logo   {
+    display: flex;
+    justify-content: space-between;
+    width: 40px; 
+    height: 40px;  
+    font-size: 2em;
+    margin-top: 11px;
+}
+
+.logo .spacingspan{
+    margin-left:10px;
+}
+
+.navlinks ul {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0; 
+}
+
+.navlinks ul li {
+    margin: 0 15px;
+}
+
+.navlinks ul li a {
+    text-decoration: none;
+    color: #000;
+    font-weight: bold;
+}
+
+.navlinks ul li a:hover {
+    color: #0066cc;
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile img {
+    width: 30px;  
+    height: 30px;
+    border-radius: 50%;  
+    cursor: pointer;
+    object-fit: cover; 
+    
+}
+
+
+.profile .bars {
+    width: 15px; /* Adjust the width as needed */
+    height:15px; /* Adjust the height as needed */
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+
+.betweenbar{
+    height: 80px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+}
+
+.betweenbar .container1{
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+padding-left: 20px;
+}
+
+.betweenbar .container1 span{
+   margin-right: 50px;
+}
+
+
+.betweenbar .container2{
+display: flex;
+flex-direction: row;
+justify-content: flex-start;
+align-items: center;
+}
+
+.betweenbar .container2 .searchthing{
+    margin-right:20px;  
+}
+.betweenbar .container2 .settings{
+    margin-right:20px; 
+}
+.betweenbar .container2 .glock{
+    margin-right:20px;
+}
+
+.betweenbar .hamburgermenu {
+    width: 30px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    height: 24px;
+    margin-right: 3px;
+}
+
+.betweenbar .hamburgermenu .bar {
+    width: 100%;
+    height: 4px;
+    background-color: #333;
+    transition: 0.3s;
+    border-radius: 2px;
+}
+
+.betweenbar .hamburgermenu:hover .bar {
+    background-color: #666;
+  }
+  
+/* Add this to create the hamburger menu animation */
+.betweenbar .hamburgermenu.active .bar:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.betweenbar .hamburgermenu.active .bar:nth-child(2) {
+  opacity: 0;
+}
+
+.betweenbar .hamburgermenu.active .bar:nth-child(3) {
+  transform: rotate(-45deg) translate(5px, -5px);
+}
+
+.sidebarundrightbar{
+    display:flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: baseline;
+    height: 800px;
+    width: 100%;
+    margin-top:20px;
+    gap:100px;
+}
+
+.sidebar {
+    display:flex;
+    flex-direction: column;
+    width: 400px;
+    border: transparent solid 1px;
+    margin-left:50px;
+    gap: 30px;
+    flex-basis: 400px;
+    flex-grow: 0;
+    flex-shrink: 0;
+    
+}
+
+.sidebarcontent{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 400px;
+    height: 100px;
+    margin-top: 2px;
+    font-size: 15px;
+    border: transparent solid 1px;
+}
+
+
+.sidebarcontent .userinfo{
+   display: flex;
+   flex-direction: row;
+   justify-content: space-between;
+   align-items: center;
+}
+
+.sidebarcontent .userinfo .symbol{
+   color:aqua
+}
+
+.sidebarcontent .userinfo .username{
+}
+
+.sidebarcontent .userinfo .userstate{
+color:green;
+
+}
+.sidebarcontent .userinfo .userdetails{
+}
+
+.sidebarcontent .useravatar{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sidebarcontent .useravatar .avatr{
+    display: flex;  
+    justify-content: center;
+    align-items: center;
+    margin-left: 20px;
+    width: 120px;  
+    height: 40px;  
+    border-radius: 50%;  
+    cursor: pointer;
+    background-image: url('/public/images/defalt.jpg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: left;
+    font-size: 11px;
+}
+
+.sidebarcontent .useravatar .avatr span {
+    margin-left: 40px; 
+    font-size: 13px;
+    text-align: center;
+}
+
+.sidebarcontent .useravatar .useraddress{
+    font-size: 13px;
+}
+
+.sidebarcontent .useravatar .chatsymbol span{
+    font-size: 14px;
+    background-color: #FF69B4; /* Pastel pink */
+    color: #FFFFFF; /* White text */
+    padding: 5px 10px; /* Add some padding to make it look like a button */
+    border-radius: 50%; /* Make it a circle */
+    cursor: pointer; /* Add a pointer cursor */
+    transition: background-color 0.3s ease-in-out; 
+}
+
+.sidebarcontent .useravatar .chatsymbol span:hover {
+    background-color: #FFC67D; /* Pastel orange on hover */
+}
+
+
+.sidebarundrightbar .sidebar .pagination {
+    display: flex;
+    flex-direction: row; /* Change from column to row */
+    justify-content: center ;
+    gap: 20px;
+    width: 400px;
+    height: 100px;
+    margin-top: 2px;
+    font-size: 15px;
+    border: transparent solid 1px;  
+    text-align: center;
+    list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sidebarundrightbar .sidebar .pagination ul{
+    display: flex;
+    flex-direction: row; /* Change from column to row */
+}
+
+.sidebarundrightbar .sidebar .pagination ul li{
+    display: inline-block;
+    margin-right: 10px;
+}
+.sidebarundrightbar .sidebar .pagination ul li a{
+    text-decoration: none;
+    color: #337ab7;
+}
+.sidebarundrightbar .sidebar .pagination ul li a:hover {
+    color: #23527c;
+}
+
+.sidebarundrightbar .sidebar .pagination .active{
+    color: #337ab7;
+    font-weight: bold;
+}
+
+
+.sidebarundrightbar .sidebar .pagination span{
+ font-size: 13px;
+}
+
+.rightbar{
+    display: flex;
+    flex-direction: column;
+    gap:50px;
+flex-grow: 1;
+flex-shrink: 1;
+
+}
+
+.rightbar .iconsDiv {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center   ;
+    padding-right: 150px;
+    font-size: 13px;
+  }
+  
+  .rightbar .iconsDiv .con1 > span{
+      font-size: 12px;
+      margin-right:20px;
+      color:gray;
+  }
+
+  .rightbar .iconsDiv .con2 > h3{
+    font-size: 12px;
+    margin-right:20px;
+    color:gray;
+}
+
+.rightbar .iconsDiv .con3{
+    display: flex;
+    width: 190px;
+    justify-content: space-between;
+   padding-left: 14px;
+   padding-right: 14px;
+   box-sizing: border-box;
+}   
+
+.rightbar .iconsDiv .con3 > h3 {
+    display: inline-block;
+    font-size: 12px;
+    color:gray;
+}
+
+.rightbar .iconsDiv .con3 > span .chatsymbols{
+   
+    color:purple;
+}
+.rightbar .iconsDiv .con3 > span .fontcolor{
+   
+    color:red;
+}
+
+.rightbar .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 300px;
+    margin-left: 75px;
+}
+
+.rightbar .topbar  >h2{
+    background-color: darkgoldenrod;
+    color: white;
+    font-size: 13px;    
+}
+.rightbar .topbar  > span{
+    color: gray;
+    font-size: 13px;
+}
+
+.rightbar  >h1{
+    margin-left: 75px;  
+    font-size: 50px;  
+}
+
+
+
+.rightbar .smoothbar{
+    display: flex;
+    justify-content: space-between;
+    width: 240px;
+    margin-left: 75px;
+    font-size: 12px;
+
+}
+
+.rightbar .smoothbar p{
+    white-space: nowrap;
+    display: inline-block;
+    margin-right: 30px;
+
+}
+
+.rightbar .smoothbar   span{
+margin-right: 10px;
+
+}
+
+.rightbar .fotoconandtext{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width:400px;
+    margin-left: 75px;
+    font-size: 12px;
+}
+
+.rightbar .fotoconandtext img{
+   height : 40px;
+   width:40px;
+   border-radius: 40px;
+   margin-right: 30px;
+}
+
+.rightbar .fotoconandtext .columndisplay{
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+  justify-content: space-between;
+  white-space: nowrap;
+  gap:6px;
+ }
+
+ .rightbar .fotoconandtext .lastdiv {
+   display: flex;
+   justify-content: space-between;
+   white-space: nowrap;
+   margin-left: 300px;
+   }
+   .rightbar .fotoconandtext .lastdiv span {
+        margin-right: 20px;
+    }
+ 
+
+.rightbar .gridcontent{
+  display:grid;
+  grid-template-columns: repeat(3, 120px); 
+  margin-left: 75px;
+  font-size: 12px;
+}
+
+.rightbar .gridcontent .column1 {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Consistent alignment */
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .rightbar .gridcontent .column1  .iconspacing {
+  margin-right: 10px;
+  }
+
+
+
+
+.rightbar .gridcontent .column2 {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Consistent alignment */
+    justify-content: flex-start;
+    gap: 15px;
+  }
+
+.rightbar .gridcontent .column2 .imgspan {
+   display: flex;
+   flex-direction: row;
+   align-items: flex-start;
+   justify-content:  space-between;
+   font-size: 12px;
+}
+.rightbar .gridcontent .column2  span img{
+  
+    width:18px;
+    height: 18px;
+    border-radius: 30px;
+    margin-right: 10px;
+}
+.rightbar .gridcontent .column2  .rowincolumn2{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+ 
+}
+.rightbar .gridcontent .column2  .rowincolumn2 span{
+    display: inline-block; /* Ensure proper width and padding */
+    white-space: nowrap;
+  }
+
+.rightbar .gridcontent .column2  .rowincolumn2 .precent{
+    display: inline-block; /* Ensure proper width and padding */
+    padding: 2px 2px; /* Add padding for better containment */
+    margin-left: 10px;
+    background-color: green;
+    color: white;
+    border-radius: 30px;
+
+  }
+
+.rightbar .gridcontent .column3{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 140px;
+    gap: 50px;
+  }
+
+.rightbar .rowaftergrid{
+    margin-left: 75px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 300px;
+    font-size: 12px;
+}
+
+
+
+.rightbar .rowaftergrid span{
+ 
+ }
+ 
+
+.rightbar .describingbox{
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap:15px;
+    padding-left: 75px;
+
+}
+.rightbar .describingbox .rowbefore{
+ 
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    padding-left: 11px;
+}
+.rightbar .describingbox .rowbefore .iconspan{
+ 
+    margin-left: 359px;
+    color:purple;
+}
+.rightbar .describingbox .rowbefore span{
+ 
+    margin-right: 18px;
+}
+
+.rightbar .describingbox .rowbefore .obligatore{
+ 
+    background-color: purple;
+    color:white;
+}
+
+
+     
+.rightbar .describingbox .boxcolumn{
+   
+    display: flex;
+    flex-direction: column;
+   justify-content: space-around;
+   border: 1px solid purple;
+   width: 600px;
+   height: 120px;   
+   gap:10px;
+   font-size: 14px;
+   padding-top: 10px;
+}
+
+.rightbar .describingbox .boxcolumn .row1{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
+
+.rightbar .describingbox .boxcolumn .row1 .span1{
+
+    margin-right: 10px;
+}
+
+.rightbar .describingbox .boxcolumn .row1 .text{ 
+ 
+   
+}
+.rightbar .describingbox .boxcolumn .row1 .span3{
+  
+    color:white;
+    background-color: purple;
+  }
+
+.rightbar .describingbox .boxcolumn .row1 .iconnike{
+margin-left: 300px;
+color:purple;
+
+}
+
+
+    
+.rightbar .describingbox .boxcolumn .row2{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 25%;
+  font-size: 14px;
+  padding-left: 20px;
+}
+
+ 
+.rightbar .describingbox .boxcolumn .row2 .firstspan{
+    margin-right: 20px;
+    color: purple;
+    align-self: flex-end;
+    margin-bottom: 4px ;
+    margin-right: 15px;
+}
+
+
+.rightbar .describingbox .boxcolumn .row2 .columncon{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap:3px;
+    font-size: 14px;
+    
+}
+
+.rightbar .describingbox .boxcolumn .row2 .columncon .columnspan1{ 
+
+}
+.rightbar .describingbox .boxcolumn .row2 .columncon .columnspan2{
+ color:gray;
+}
+
+
+.rightbar .describingbox .boxcolumn .row2 .icon{
+    margin-left:380px;
+}
+    
+
+
+
+
+
+
+
