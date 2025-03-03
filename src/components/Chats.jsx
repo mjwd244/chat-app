@@ -6,7 +6,7 @@
   export const Chats = ({ highlightedUsers, isBlackOverlay,setIsGroupChat }) => {
 
     const { setSelectedUser,friend,setFriends, setMessage, message,
-    mainuser, rerender,socket, setRerender,unreadCounts, setActuallMessageId,isGroupChat,selectedUser ,setShowCreateGroup, actuallmessagesId,selectedFriends,setSelectedFriends,setfriendUserTimestampSave,setmainUserTimeStampSave} = useUser();
+    mainuser, rerender,socket, setRerender,unreadCounts, setUnreadCounts, setActuallMessageId,isGroupChat,selectedUser ,setShowCreateGroup, actuallmessagesId,selectedFriends,setSelectedFriends,setfriendUserTimestampSave,setmainUserTimeStampSave} = useUser();
     const mainuserRef = useRef(mainuser);
     const clickedElementRef = useRef(null);
     const [isSelected, setIsSelected] = useState({});
@@ -195,6 +195,15 @@
           }
       }
     }
+    const handleSelectConversation = (user) => {
+      
+      setUnreadCounts(prev => ({
+          ...prev,
+          [user]: 0
+      }));
+  };
+  
+  
     
     return (
       <div className='chats'>
@@ -217,19 +226,24 @@
                     handleSelectFriend(chat);
                     setMessage([]);
                     setSelectedFriends(prevToggle => !prevToggle);
+                    handleSelectConversation(chat.friendId);
                   }
                 }}
             >
               <div className="userChatInfo">
+                <div className='userChatInfocolumn'>
                 <span>{chat.friendName}</span>
                 <img src={chat.photo} alt="" />
                 <span>{getStatusMessage(chat.status)}</span>
                 {isSelected[chat.friendId] && <span>Selected</span>}
-                {unreadCounts && chat.friendId && unreadCounts[chat.friendId] > 0 && (
-    <span className="unread-badge">
-        {unreadCounts[chat.friendId]}
-    </span>
-)}
+                </div>
+                <div className='userChatInforow'>
+                    {unreadCounts && chat.friendId && unreadCounts[chat.friendId] > 0 && (
+                          <div className="unread-badge">
+                              {unreadCounts[chat.friendId]}
+                          </div>
+                      )}
+                </div>
 
 
               </div>

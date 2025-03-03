@@ -131,9 +131,7 @@ const Chat = ({ onSearchChat, toggleBlackOverlay, isGroupChat, setIsGroupChat })
         console.log('All stored messages sent');
     };
 
-    useEffect(() => {
-        console.log('isGroupChat changed:', isGroupChat);
-    }, [isGroupChat]);
+    
 
     const handleSearchS = (searchTerm) => {
         onSearchChat(searchTerm);
@@ -203,15 +201,21 @@ const Chat = ({ onSearchChat, toggleBlackOverlay, isGroupChat, setIsGroupChat })
     
         socket.on('newUnreadMessage', (data) => {
             if (data.receiverId === mainuser[0].userId) {
+               
+                const isCurrentChat = selectedUser && selectedUser[0] && selectedUser[0].id === data.senderId;
+                console.log("New unread message received:", data);
+                console.log("Is current chat:", isCurrentChat);
+                if (!isCurrentChat) {
                 setUnreadCounts(prev => ({
                     ...prev,
                     [data.senderId]: (prev[data.senderId] || 0) + 1
                 }));
             }
+            }
         });
     
         return () => socket.off('newUnreadMessage');
-    }, [socket, socketReady, mainuser]);
+    }, [socket, socketReady, mainuser, selectedUser]);
 
     useEffect(() => {
         console.log(unreadCounts);
@@ -230,7 +234,7 @@ const Chat = ({ onSearchChat, toggleBlackOverlay, isGroupChat, setIsGroupChat })
                  newMessage.receiverId === mainuser[0].userId);
     
             if (isRelevantMessage) {
-
+                console.log(" 333 here i recieved a message")
           
                 if (newMessage.encrypted) {
                     const bytes = CryptoJS.AES.decrypt(newMessage.text, SECRET_PASS);
@@ -265,16 +269,17 @@ const Chat = ({ onSearchChat, toggleBlackOverlay, isGroupChat, setIsGroupChat })
         });
     
         return () => socket.off('receiveMessage');
-    }, [socket, socketReady, actuallmessagesId, selectedUser, mainuser]);
+    }, [socket, socketReady]);
    
+   
+
     useEffect(() => {
-        if (actuallmessagesId) {
-            setUnreadCounts(prev => ({
-                ...prev,
-                [actuallmessagesId]: 0
-            }));
-        }
-    }, [actuallmessagesId]);
+        console.log('Unread Message Counts:', JSON.stringify(unreadCounts, null, 2));
+        // Loop through each user's unread messages
+        Object.entries(unreadCounts).forEach(([userId, count]) => {
+            console.log(`User ${userId} has ${count} unread messages`);
+        });
+    }, [unreadCounts]);
 
     useEffect(() => {
         console.log("creating conversation ...")

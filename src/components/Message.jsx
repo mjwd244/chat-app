@@ -4,7 +4,7 @@ import styles from '../Groupchat.module.css';
 import CryptoJS from 'crypto-js';
 
 const SECRET_PASS = "XkhZG4fW2t2W";
-const Messages = ({ message, friendObject, messageClasses, componentType }) => {
+const Message = ({ message, friendObject, messageClasses, componentType }) => {
   const { mainuser,socket, socketReady ,setMessage ,actuallmessagesId,selectedUser } = useUser();
   const [messageClass, setMessageClass] = useState();
   const [messageInfoClass, setMessageInfoClass] = useState();
@@ -143,8 +143,9 @@ useEffect(() => {
         msg._id === messageId
           ? {
               ...msg,
-              reactions: [
-                { userId: mainuser[0].userId, reaction }]
+              reactions: [...(msg.reactions || []), 
+                { userId: mainuser[0].userId, reaction }
+              ]
             }
           : msg
       )
@@ -715,4 +716,4 @@ useEffect(() => {
   );
 };
 
-export default Messages;  
+export default Message;  
