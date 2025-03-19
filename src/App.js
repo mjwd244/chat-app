@@ -11,7 +11,7 @@ import UserDetails from './pages/UserDetails';
 import Userspage from './pages/Userspage';
 import FriendPage from './components/FriendPage';
 import Mainpage from './components/Mainpage'
-import Test from "./components/Test";
+//import Test from "./components/Test";
 import ProfilePage from "./components/ProfilePage";
 import Forgotpassword from './pages/Forgotpassword';
 import Resetpassword from "./pages/ResetPassword";
@@ -63,7 +63,7 @@ function App() {
         <Route path="/user/:uid" element={<MyEdit />} />
         <Route path="/friends" element={<FriendPage />} />
         <Route path="/main" element={<Mainpage />} />
-        <Route path="/Test" element={<Test />} />
+      {/* <Route path="/Test" element={<Test />} /> */}
         <Route path="/profilepage" element={<ProfilePage />} />
         <Route path="/forgot-password" element={<Forgotpassword />} />
         <Route path="/reset-password" element={<Resetpassword />} />

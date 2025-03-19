@@ -1,10 +1,10 @@
 import React, { useState,  useEffect , useRef} from 'react';
-import styles from '../Groupchat.module.css';
+import styles from '../assets/Groupchat.module.css';
 import Messages from "./Messages";
 import { useChat, useUser } from './UserContext';
 
 const CreateGroup = ({ selectedFriends, onClose }) => {
-  const { actuallmessagesId,setActuallMessageId, mainuser, message, setMessage, selectedUser ,groups,currentTime} = useUser();
+  const { actuallmessagesId,setActuallMessageId, mainuser, message, setMessage, selectedUser ,groups} = useUser();
 
   const [messageInput, setMessageInput] = useState(''); 
   const [localMessages, setLocalMessages] = useState([]); // New state for displaying messages in the UI

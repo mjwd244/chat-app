@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useUser } from '../components/UserContext';
-import UserDetailsCss from '../UserDetails.module.css';
+import UserDetailsCss from '../assets/UserDetails.module.css';
 
 
 export const createConversation = async (mainuser,userId) => {

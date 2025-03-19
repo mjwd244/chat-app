@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import FriendSearchCss from '../FriendSearch.module.css'; // Import the CSS file for styling
+import FriendSearchCss from '../assets/FriendSearch.module.css'; // Import the CSS file for styling
 import { useUser } from '../components/UserContext';
 import { useNavigate } from 'react-router-dom';
 

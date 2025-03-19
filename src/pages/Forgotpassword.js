@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import styles from '../Forgotpassword.module.css'; // Import the CSS module
+import styles from '../assets/Forgotpassword.module.css'; // Import the CSS module
 import { useNavigate } from 'react-router-dom';
 
 const Forgotpassword = () => {

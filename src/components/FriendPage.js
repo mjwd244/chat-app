@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from '../FriendPage.module.scss';
+import styles from '../assets/FriendPage.module.scss';
 
 const FriendPage = () => {
   return (

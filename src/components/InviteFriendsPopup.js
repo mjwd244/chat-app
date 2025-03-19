@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import styles from '../InviteFriendsPopup.module.css'; // Create a CSS module for styling
+import styles from '../assets/InviteFriendsPopup.module.css'; // Create a CSS module for styling
 import { useUser } from './UserContext';
 
 const InviteFriendsPopup = ({ friend,selectedFriends,setSelectedFriends,  onClose }) => {

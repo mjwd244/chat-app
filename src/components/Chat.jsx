@@ -10,6 +10,9 @@ import { useChat, useUser } from './UserContext';
 import GroupChat from "./GroupChat";
 import { createConversation } from '../pages/UserDetails';
 import { Detector } from "react-detect-offline";
+import { useSocketListeners } from '../hooks/chathooks/useSocketListeners';
+import { useMessageHandlers } from '../hooks/chathooks/useMessageHandlers';
+import { useGroupChat } from '../hooks/chathooks/useGroupChat';
 import CryptoJS from 'crypto-js';
 
 const SECRET_PASS = "XkhZG4fW2t2W"; // Add this at the top with other imports
@@ -17,125 +20,18 @@ const SECRET_PASS = "XkhZG4fW2t2W"; // Add this at the top with other imports
 const Chat = ({ onSearchChat, toggleBlackOverlay, isGroupChat, setIsGroupChat }) => {
     const { showAddFriend, setShowAddFriend } = useChat();
     const [inputValue, setInputValue] = useState('');
-    const { friend,setUnreadCounts,unreadCounts, actuallmessagesId, mainuser, message, socket, socketReady, setMessage, selectedUser, setActuallMessageId, groupId, rerender, setRerender } = useUser();
+    const { friend, setUnreadCounts, actuallmessagesId, mainuser, message, socket, socketReady, setMessage, selectedUser, setActuallMessageId, groupId, rerender, setRerender } = useUser();
     const messageClasses = {
         message: 'message',
         messageInfo: 'messageInfo',
         messageContent: 'messageContent',
         wholecontainer: 'messages'
     };
-    const [showDropdown, setShowDropdown] = useState(false);
-    const [buttonLabel, setButtonLabel] = useState('');
-    const [triggersend, setTriggersend] = useState(false);
 
-
-
-
-    useEffect(() => {
-        if (!socket || !socketReady) return;
-        // Listen for user status updates
-        socket.on('updateUserStatus', ({ userId, isOnline }) => {
-            if (isOnline) {
-                // Find messages that were sent to this user with 'sent' status
-                const messagesToUpdate = message.filter(msg => 
-                    msg.status === 'sent' &&
-                    msg.sender === mainuser[0].userId
-                );
-
-                console.log(message);
-                console.log("MEESSSSAAGEE", JSON.stringify(messagesToUpdate, null, 2));
-                // Update each message status
-                messagesToUpdate.forEach(msg => {
-                    socket.emit('updateMessageStatus', {
-                        conversationId: actuallmessagesId,
-                        timestamp: msg.timestamp,
-                        sender: msg.sender,
-                        newStatus: 'delivered',
-                    });
-                });
-
-                // Update local message state
-                setMessage(prevMessages =>
-                    prevMessages.map(msg =>
-                        msg.sender === mainuser[0].userId && 
-                        msg.status === 'sent' 
-                            ? { ...msg, status: 'delivered' }
-                            : msg
-                    )
-                );
-            }
-        });
-    }, [socket, socketReady, message, mainuser, actuallmessagesId]);
-
-    
-
-    useEffect(() => {
-        if (selectedUser && selectedUser[0]) {
-            let status = selectedUser[0].status;
-            const isDate = !isNaN(new Date(status));
-            if (isDate) {
-                status = 'offline';
-            } else { 
-                status = selectedUser[0].status;
-            }
-            console.log("Selected User Details:", {
-                id: selectedUser[0].id,
-                displayName: selectedUser[0].displayName,
-                photo: selectedUser[0].photo,
-                status: isDate ? 'offline' : status,
-                publicKey: selectedUser[0].publicKey // Log publicKey
-            });
-        }
-    }, [selectedUser]);
-
-    const storeUnsentMessage = (text, fileURL) => {
-        const unsentMessages = JSON.parse(localStorage.getItem('unsentMessages') || '[]');
-        const newMessage = {
-            text,
-            fileURL,
-            conversationId: actuallmessagesId,
-            sender: mainuser[0].userId,
-            timestamp: new Date().toISOString(),
-            pending: true
-        };
-        
-        unsentMessages.push(newMessage);
-        localStorage.setItem('unsentMessages', JSON.stringify(unsentMessages));
-        
-        // Update UI with pending message
-        setMessage(prev => [...prev, { ...newMessage, source: 'chat' }]);
-        console.log('Message stored in localStorage and UI updated');
-    };
-
-    const sendStoredMessages = async () => {
-        const unsentMessages = JSON.parse(localStorage.getItem('unsentMessages') || '[]');
-        if (unsentMessages.length === 0) return;
-
-        console.log('Sending stored messages...');
-
-        setMessage(prev => prev.map(msg => 
-            msg.pending ? { ...msg, pending: false } : msg
-        ));
-        
-        for (const message of unsentMessages) {
-            try {
-                await sendMessage(message.text, message.fileURL);
-                console.log('Stored message sent successfully');
-            } catch (error) {
-                console.error('Failed to send stored message:', error);
-                return;
-            }
-        }
-
-        localStorage.removeItem('unsentMessages');
-        console.log('All stored messages sent');
-    };
-
-    
-
-    const handleSearchS = (searchTerm) => {
-        onSearchChat(searchTerm);
-    };
+    // Use custom hooks
+    useSocketListeners({socket, socketReady, mainuser, selectedUser, actuallmessagesId, setMessage, message, setUnreadCounts});
+    const { storeUnsentMessage, sendStoredMessages, sendMessage, triggersend, setTriggersend } = useMessageHandlers(socket, mainuser, selectedUser, actuallmessagesId, setMessage);
+    const { showDropdown, setShowDropdown, buttonLabel, handleGroupDeletionOrExit } = useGroupChat(groupId, mainuser, setRerender);
 
     const handleSendWithConnectionCheck = (online, text, fileURL) => {
         if (!online) {
@@ -143,143 +39,28 @@ const Chat = ({ onSearchChat, toggleBlackOverlay, isGroupChat, setIsGroupChat })
             storeUnsentMessage(text, fileURL);
             return;
         }
-        triggeeringsendingMessage(text, fileURL);
-    };
-
-    const triggeeringsendingMessage = (text, fileURL) => {
         setTriggersend(!triggersend);
         sendMessage(text, fileURL);
     };
 
-    const sendMessage = async (text, fileURL) => {
-        if (!actuallmessagesId || !text.trim()) return;
-        
-        let messageStatus = 'sent';
-        if (selectedUser && selectedUser[0]) {
-            const status = selectedUser[0].status;
-            const isDate = !isNaN(new Date(status));
-            if (isDate || status === 'offline') {
-                messageStatus = 'sent';
-            } else if (status === 'online' || ['away', 'busy', 'doNotDisturb'].includes(status)) {
-                messageStatus = 'delivered';
-            }
-        }
-    
-        // Encrypt message
-        const encryptedText = CryptoJS.AES.encrypt(
-            JSON.stringify(text),
-            SECRET_PASS
-        ).toString();
-    
-        // Create message object
-        const messageToSend = {
-            conversationId: actuallmessagesId,
-            text: encryptedText,
-            encrypted: true,
-            fileURL: fileURL || null,
-            sender: mainuser[0].userId,
-            timestamp: new Date().toISOString(),
-            status: messageStatus
-        };
-    
-        // Update UI with unencrypted message
-        setMessage(prev => [...prev, { 
-            ...messageToSend, 
-            text: text,  // Show original text in UI
-            source: 'chat' 
-        }]);
-    
-        // Send encrypted message through socket
-        socket.emit('sendMessage', {
-            ...messageToSend,
-            receiverId: selectedUser[0].id
-        });
-    };
-
-    useEffect(() => {
-        if (!socketReady || !socket) return;
-    
-        socket.on('newUnreadMessage', (data) => {
-            if (data.receiverId === mainuser[0].userId) {
-               
-                const isCurrentChat = selectedUser && selectedUser[0] && selectedUser[0].id === data.senderId;
-                console.log("New unread message received:", data);
-                console.log("Is current chat:", isCurrentChat);
-                if (!isCurrentChat) {
-                setUnreadCounts(prev => ({
-                    ...prev,
-                    [data.senderId]: (prev[data.senderId] || 0) + 1
-                }));
-            }
-            }
-        });
-    
-        return () => socket.off('newUnreadMessage');
-    }, [socket, socketReady, mainuser, selectedUser]);
-
-    useEffect(() => {
-        console.log(unreadCounts);
-    }, [unreadCounts]);
-
-
-    useEffect(() => {
-        if (!socketReady || !socket) return;
-        if (!selectedUser || !selectedUser[0] || !actuallmessagesId || !mainuser || !mainuser[0]) return;
-    
-        socket.on('receiveMessage', (newMessage) => {
-         
-            const isRelevantMessage = 
-                newMessage.conversationId === actuallmessagesId &&
-                (newMessage.sender === selectedUser[0].id ||
-                 newMessage.receiverId === mainuser[0].userId);
-    
-            if (isRelevantMessage) {
-                console.log(" 333 here i recieved a message")
-          
-                if (newMessage.encrypted) {
-                    const bytes = CryptoJS.AES.decrypt(newMessage.text, SECRET_PASS);
-                    const decryptedText = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-                    
-                    const messageToDisplay = {
-                        ...newMessage,
-                        text: decryptedText,
-                        encrypted: false,
-                        source: 'chat'
-                    };
-                    
-                    setMessage(prev => {
-                        const messageExists = prev.some(msg =>
-                            msg.timestamp === newMessage.timestamp &&
-                            msg.sender === newMessage.sender
-                        );
-                        if (messageExists) return prev;
-                        return [...prev, messageToDisplay];
-                    });
-                } else {
-                    setMessage(prev => {
-                        const messageExists = prev.some(msg =>
-                            msg.timestamp === newMessage.timestamp &&
-                            msg.sender === newMessage.sender
-                        );
-                        if (messageExists) return prev;
-                        return [...prev, { ...newMessage, source: 'chat' }];
-                    });
+     useEffect(() => {
+            if (selectedUser && selectedUser[0]) {
+                let status = selectedUser[0].status;
+                const isDate = !isNaN(new Date(status));
+                if (isDate) {
+                    status = 'offline';
+                } else { 
+                    status = selectedUser[0].status;
                 }
+                console.log("Selected User Details:", {
+                    id: selectedUser[0].id,
+                    displayName: selectedUser[0].displayName,
+                    photo: selectedUser[0].photo,
+                    status: isDate ? 'offline' : status,
+                    publicKey: selectedUser[0].publicKey // Log publicKey
+                });
             }
-        });
-    
-        return () => socket.off('receiveMessage');
-    }, [socket, socketReady]);
-   
-   
-
-    useEffect(() => {
-        console.log('Unread Message Counts:', JSON.stringify(unreadCounts, null, 2));
-        // Loop through each user's unread messages
-        Object.entries(unreadCounts).forEach(([userId, count]) => {
-            console.log(`User ${userId} has ${count} unread messages`);
-        });
-    }, [unreadCounts]);
+        }, [selectedUser]);
 
     useEffect(() => {
         console.log("creating conversation ...")
@@ -308,70 +89,6 @@ const Chat = ({ onSearchChat, toggleBlackOverlay, isGroupChat, setIsGroupChat })
 
     const toggleGroupOptionsDropdown = () => {
         setShowDropdown((prev) => !prev);
-    };
-
-    const updateGroupActionLabel = async () => {
-        try {
-            const response = await fetch(`http://localhost:5000/api/auth/groups/state/${mainuser[0].userId}/${groupId}`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-            if (response.ok) {
-                setButtonLabel("delete group")
-            }
-            if (!response.ok) {
-                setButtonLabel("leave group")
-            }
-        } catch (error) {
-            console.error('Error checking user state :', error);
-        }
-    };
-
-    useEffect(() => {
-        if (showDropdown) {
-            updateGroupActionLabel();
-        }
-    }, [showDropdown]);
-
-    const handleGroupDeletionOrExit = async () => {
-        if (buttonLabel === "delete group") {
-            try {
-                const response = await fetch(`http://localhost:5000/api/auth/groups/${groupId}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                });
-                if (response.ok) {
-                    console.log('Group deleted successfully');
-                    setRerender((prev) => prev + 1);
-                } else {
-                    console.error('Failed to delete group');
-                }
-            } catch (error) {
-                console.error('Error deleting group:', error);
-            }
-        } else {
-            try {
-                console.log('User ID:', mainuser[0].userId);
-                console.log('Group ID:', groupId);
-                const response = await fetch(`http://localhost:5000/api/auth/groups/userRemovel/${mainuser[0].userId}/${groupId}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                });
-                if (response.ok) {
-                    console.log('user was removed');
-                    setRerender((prev) => prev + 1);
-                } else {
-                    console.error('user wasnt removed successfully');
-                }
-            } catch (error) {
-                console.error('Error deleting user:', error);
-            }
-        }
     };
 
     return (
@@ -414,7 +131,7 @@ const Chat = ({ onSearchChat, toggleBlackOverlay, isGroupChat, setIsGroupChat })
                                             setInputValue={setInputValue}
                                             onSend={(text, fileURL) => handleSendWithConnectionCheck(online, text, fileURL)}
                                         />
-                                        {showAddFriend && <AddFriend onSearchAdd={handleSearchS} />}
+                                        {showAddFriend && <AddFriend onSearchAdd={onSearchChat} />}
                                     </>
                                 )}
                                 <div style={{

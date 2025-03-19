@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useUser } from '../components/UserContext';
-import GoogleLoginComponent from '../components/GoogleLoginComponent';
-import FacebookSDKLoader from '../components/FacebookSDKLoader';
-import FacebookLoginButton from '../components/FacebookLoginButton';
+import GoogleLoginComponent from '../components/auth/GoogleLoginComponent';
+import FacebookSDKLoader from '../components/auth/FacebookSDKLoader';
+import FacebookLoginButton from '../components/auth/FacebookLoginButton';
 import axios from "axios";
 
 

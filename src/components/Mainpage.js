@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import styles from '../MainPage.module.css';
+import styles from '../assets/MainPage.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';

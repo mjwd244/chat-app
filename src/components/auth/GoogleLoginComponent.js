@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { useUser } from '../components/UserContext';
+import { useUser } from '../UserContext';
 import { GoogleLogin } from '@react-oauth/google';
 
 const GoogleLoginComponent = () => {

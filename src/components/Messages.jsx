@@ -1,6 +1,6 @@
 import React from 'react'
 import Message from "./Message"
-import styles from '../Groupchat.module.css';
+import styles from '../assets/Groupchat.module.css';
 import { useUser } from '../components/UserContext';
 
 const Messages = ({message ,friendObject,messageClasses ,componentType}) => {

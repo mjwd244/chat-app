@@ -6,7 +6,7 @@ import {firestore} from '../firebaseconfig'
 import {  doc,collection,addDoc ,serverTimestamp,updateDoc   } from "firebase/firestore";
 import { storage } from '../firebaseconfig';
 
-import { uploadPhotoAndUpdateProfile } from '../newStorage';
+import { uploadPhotoAndUpdateProfile } from '../storage/newStorage';
 
 const UserProfile = () => {
     const { uid } = useParams();

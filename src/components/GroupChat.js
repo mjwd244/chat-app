@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useUser } from './UserContext';
-import styles from '../Groupchat.module.css';
+import styles from '../assets/Groupchat.module.css';
 import CreateGroup from './CreateGroup';
 import InviteFriendsPopup from './InviteFriendsPopup'; // Import the new component
 

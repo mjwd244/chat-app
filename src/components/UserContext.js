@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { getSocket, disconnectSocket } from './socket';
-import { E2EEncryption } from '../utils/E2EEncryption';
+
 
 const UserContext = createContext();
 const ChatContext = createContext();
@@ -56,9 +56,6 @@ export const UserProvider = ({ children }) => {
   const [groupId, setGroupId] = useState("");
   const [isGroupChat, setIsGroupChat] =  useState(false); 
   const [showCreateGroup, setShowCreateGroup] = useState(false);
-  const [currentTime, setCurrentTime] = useState(new Date()); // Add state for current time
-  const [friendUserTimestampSave , setfriendUserTimestampSave ]  = useState();
-  const [mainUserTimeStampSave, setmainUserTimeStampSave] = useState();
   const [unreadCounts, setUnreadCounts] = useState({});
 
 
@@ -118,11 +115,6 @@ export const UserProvider = ({ children }) => {
     setIsGroupChat,
     showCreateGroup,
     setShowCreateGroup,
-    currentTime,
-    friendUserTimestampSave,
-    setfriendUserTimestampSave,
-    mainUserTimeStampSave,
-    setmainUserTimeStampSave,
     socket,
     socketReady,
     unreadCounts,

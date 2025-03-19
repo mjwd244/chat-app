@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useUser } from '../components/UserContext';
-import GoogleLoginComponent from '../components/GoogleLoginComponent';
+import GoogleLoginComponent from '../components/auth/GoogleLoginComponent';
 import CryptoJS from 'crypto-js';
 const SECRET_PASS = "XkhZG4fW2t2W";
 

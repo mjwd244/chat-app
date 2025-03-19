@@ -1,5 +1,5 @@
 import React, { useEffect,useState } from 'react';
-import userpagesCss from '../userspages.module.css'; 
+import userpagesCss from '../assets/userspages.module.css'; 
 import { useLocation } from 'react-router-dom';
 import { collection, query, where, getDocs, doc,getDoc, onSnapshot } from "firebase/firestore";
 import {firestore} from '../firebaseconfig'

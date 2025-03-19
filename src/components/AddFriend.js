@@ -1,6 +1,6 @@
 import React from 'react';
 import FriendSearch from './FriendSearch';
-import AddfriendCss from '../AddFriend.module.css'; // Import the CSS file for styling
+import AddfriendCss from '../assets/AddFriend.module.css'; // Import the CSS file for styling
 import { useChat } from './UserContext';
 
 const AddFriend = ({onSearchAdd}) => {

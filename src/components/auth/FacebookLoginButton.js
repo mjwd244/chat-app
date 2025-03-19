@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
-import { useUser } from './UserContext'; // Adjust the import path as needed
+import { useUser } from '../UserContext'; // Adjust the import path as needed
 
 const FacebookLoginButton = ({ onLogin }) => {
   const navigate = useNavigate();

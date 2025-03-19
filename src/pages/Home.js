@@ -11,7 +11,7 @@ const Home = ({ isGroupChat ,setIsGroupChat}) => {
   const [isBlackOverlay, setIsBlackOverlay] = useState(false);
   const [highlightedUsers, setHighlightedUsers] = useState([]);
 
-  const { mainuser,  mainUserTimeStampSave ,friendUserTimestampSave} = useUser(); // Get the user from context
+  const { mainuser} = useUser(); // Get the user from context
   const navigate = useNavigate(); // Hook to navigate programmatically
   const [toggeluseeffect , settoogleUseeffect] = useState(false)
 
@@ -48,7 +48,7 @@ const Home = ({ isGroupChat ,setIsGroupChat}) => {
     });
   };
   useEffect(() => {
-    console.log('Home component mounted or mainuser changed:', JSON.stringify(mainuser, null, 2));
+    //console.log('Home component mounted or mainuser changed:', JSON.stringify(mainuser, null, 2));
     if (!mainuser || !mainuser[0] || !mainuser[0].userId) {
       console.error('Invalid user state detected:', JSON.stringify(mainuser, null, 2));
       navigate('/register');
@@ -94,8 +94,7 @@ const Home = ({ isGroupChat ,setIsGroupChat}) => {
   };
   useEffect(() => {
   
-    console.log("mainuser timestamp" + mainUserTimeStampSave)
-    console.log("friend timestamp" + friendUserTimestampSave)
+   
   
 },[toggeluseeffect]);
   return (

@@ -45,9 +45,9 @@ const Sidebar = ({highlightedUsers, isBlackOverlay,setIsGroupChat})  => {
     }
   };
 
-  useEffect(()=>{
+  /*useEffect(()=>{
     console.log("groups" + groups)
-  },[groups])
+  },[groups])*/
 
   const handleToggleView = () => {
     setShowlistedgroups(true)
