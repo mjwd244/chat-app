@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import CryptoJS from 'crypto-js';
 
 const SECRET_PASS = "XkhZG4fW2t2W";
 
 export const useChatsData = (mainuser, setMessage, setActuallMessageId, setFriends, setRerender, rerender, selectedFriends, selectedUser, setSelectedUser) => {
-  const [isSelected, setIsSelected] = useState({});
+ 
+
+  
 
   const fetchAndDisplayConversationMessages = async (userId) => {
     console.log('Fetching messages for user:', userId); // Debugging
@@ -62,23 +64,20 @@ export const useChatsData = (mainuser, setMessage, setActuallMessageId, setFrien
     }
   };
 
-  const TodisplayFriendsinChatsComponent = async (userId) => {
-    try {
-      const response = await fetch(`http://localhost:5000/api/auth/friends/${userId}`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const friendsData = await response.json();
-      if (friendsData && friendsData.numberOfFriends > 0) {
-        setFriends(friendsData.friends);
-      } else {
-        console.log("No friends found.");
-      }
-      return friendsData;
-    } catch (error) {
-      console.error(`Error fetching friends: ${error}`);
-    }
-  };
+  const TodisplayFriendsinChatsComponent = useCallback((userId) => {
+    // Logic to fetch and display friends
+    fetch(`http://localhost:5000/api/auth/friends/${userId}`)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data && data.friends) {
+          setFriends(data.friends);
+        }
+      })
+      .catch((error) => {
+        console.error('Error fetching friends:', error);
+      });
+  }, [setFriends]);
+
 
   useEffect(() => {
     if (mainuser && mainuser[0] && mainuser[0].userId) {
@@ -87,8 +86,6 @@ export const useChatsData = (mainuser, setMessage, setActuallMessageId, setFrien
   }, [rerender, mainuser]);
 
   return {
-    isSelected,
-    setIsSelected,
     fetchAndDisplayConversationMessages,
     DeleteFriendfromdatabase,
     TodisplayFriendsinChatsComponent,

@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-export const useSocketListenersChats = (socket, mainuser, TodisplayFriendsinChatsComponent) => {
+export const useSocketListenersChats = (socket, mainuser,TodisplayFriendsinChatsComponent) => {
   const mainuserRef = useRef(mainuser);
 
   useEffect(() => {
@@ -28,5 +28,5 @@ export const useSocketListenersChats = (socket, mainuser, TodisplayFriendsinChat
       socket.off('connect');
       socket.off('updateUserStatus');
     };
-  }, [socket, TodisplayFriendsinChatsComponent]);
+  }, [socket,TodisplayFriendsinChatsComponent ]);
 };

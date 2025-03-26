@@ -1,6 +1,6 @@
 import { showNotification, playSound } from './notificationUtils';
 
-export const setupSocketListeners = (socketReady , socket, setMessage, mainuser, selectedUser, actuallmessagesId) => {
+export const messageScoketListeners = (socketReady , socket, setMessage, mainuser, selectedUser, actuallmessagesId) => {
   if (!socket || !socketReady) return;
   
     socket.on('messageStatusUpdated', ({ messageId, status }) => {

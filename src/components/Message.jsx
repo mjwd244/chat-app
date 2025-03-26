@@ -4,7 +4,7 @@ import styles from '../assets/Groupchat.module.css';
 import { pinMessage, unpinMessage, deleteMessage, saveEdit,handleEditMessage } from '../utils/messageutils/messageOperations';
 import { renderMessageFile, formatMessageTimestamp } from '../utils/messageutils/messageRenderers';
 import { comparemessagedates } from '../utils/messageutils/dateUtils';
-import { setupSocketListeners } from '../utils/messageutils/socketHandlers';
+import { messageScoketListeners } from '../utils/messageutils/messageScoketListeners';
 import { setupMessageObserver } from '../utils/messageutils/observerUtils';
 import MessageReaction from '../components/MessageReaction';
 import MessageStatus from '../components/MessageStatus';
@@ -40,7 +40,7 @@ const Message = ({ message, friendObject, messageClasses, componentType }) => {
 
   useEffect(() => {
     if (!socket || !socketReady) return;
-    const cleanup = setupSocketListeners(socketReady, socket, setMessage, mainuser, selectedUser, actuallmessagesId);
+    const cleanup = messageScoketListeners(socketReady, socket, setMessage, mainuser, selectedUser, actuallmessagesId);
     return cleanup;
   }, [socket, socketReady]);
 

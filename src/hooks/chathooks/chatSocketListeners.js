@@ -1,9 +1,10 @@
 import { useEffect } from 'react';
 import CryptoJS from 'crypto-js';
+import { playSound } from '../../utils/messageutils/notificationUtils';
 
 const SECRET_PASS = "XkhZG4fW2t2W";
 
-export const useSocketListeners = ({
+export const chatSocketListeners = ({
   socket,
   socketReady,
   mainuser,
@@ -49,6 +50,7 @@ export const useSocketListeners = ({
       if (data.receiverId === mainuser[0].userId) {
         const isCurrentChat = selectedUser && selectedUser[0] && selectedUser[0].id === data.senderId;
         if (!isCurrentChat) {
+          playSound();
           setUnreadCounts((prev) => ({
             ...prev,
             [data.senderId]: (prev[data.senderId] || 0) + 1,
@@ -61,8 +63,12 @@ export const useSocketListeners = ({
     socket.on('receiveMessage', (newMessage) => {
       const isRelevantMessage =
         newMessage.conversationId === actuallmessagesId &&
-        (newMessage.sender === selectedUser[0].id ||
-          newMessage.receiverId === mainuser[0].userId);
+        (
+          (selectedUser && selectedUser[0] && newMessage.sender === selectedUser[0].id) ||
+          newMessage.receiverId === mainuser[0].userId
+        );
+    
+    
 
       if (isRelevantMessage) {
         if (newMessage.encrypted) {

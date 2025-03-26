@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { getStatusMessage } from '../utils/chatsutils/getStatusMessage'; // Import the utility function
 
 export const ChatItem = ({
@@ -14,6 +14,7 @@ export const ChatItem = ({
   handleSelectConversation,
   unreadCounts
 }) => {
+  
   // Helper function to handle click events
   const handleClick = (e) => {
     const element = e.currentTarget;
@@ -33,6 +34,22 @@ export const ChatItem = ({
       handleSelectConversation(chat.friendId);
     }
   };
+ 
+
+  useEffect(() => {
+    console.log('ChatItem Props:', {
+      chat,
+      isSelected,
+      unreadCounts,
+      highlightedUsers,
+      isBlackOverlay,
+    });
+  }, [chat, isSelected, unreadCounts, highlightedUsers, isBlackOverlay]);
+
+  useEffect(() => {
+    console.log('ChatItem Props:', { chat, isSelected, unreadCounts });
+  }, [chat, isSelected, unreadCounts]);
+
 
   // Helper function to render the user chat info
   const renderUserChatInfo = () => (

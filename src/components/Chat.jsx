@@ -10,7 +10,7 @@ import { useChat, useUser } from './UserContext';
 import GroupChat from "./GroupChat";
 import { createConversation } from '../pages/UserDetails';
 import { Detector } from "react-detect-offline";
-import { useSocketListeners } from '../hooks/chathooks/useSocketListeners';
+import { chatSocketListeners } from '../hooks/chathooks/chatSocketListeners';
 import { useMessageHandlers } from '../hooks/chathooks/useMessageHandlers';
 import { useGroupChat } from '../hooks/chathooks/useGroupChat';
 import CryptoJS from 'crypto-js';
@@ -29,7 +29,7 @@ const Chat = ({ onSearchChat, toggleBlackOverlay, isGroupChat, setIsGroupChat })
     };
 
     // Use custom hooks
-    useSocketListeners({socket, socketReady, mainuser, selectedUser, actuallmessagesId, setMessage, message, setUnreadCounts});
+    chatSocketListeners({socket, socketReady, mainuser, selectedUser, actuallmessagesId, setMessage, message, setUnreadCounts});
     const { storeUnsentMessage, sendStoredMessages, sendMessage, triggersend, setTriggersend } = useMessageHandlers(socket, mainuser, selectedUser, actuallmessagesId, setMessage);
     const { showDropdown, setShowDropdown, buttonLabel, handleGroupDeletionOrExit } = useGroupChat(groupId, mainuser, setRerender);
 
