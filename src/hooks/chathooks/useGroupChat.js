@@ -7,7 +7,7 @@ export const useGroupChat = (groupId, mainuser, setRerender) => {
   const updateGroupActionLabel = async () => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/auth/groups/state/${mainuser[0].userId}/${groupId}`,
+        `https://localhost:5000/api/auth/groups/state/${mainuser[0].userId}/${groupId}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -34,7 +34,7 @@ export const useGroupChat = (groupId, mainuser, setRerender) => {
     if (buttonLabel === 'delete group') {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/auth/groups/${groupId}`,
+          `https://localhost:5000/api/auth/groups/${groupId}`,
           {
             method: 'DELETE',
             headers: {
@@ -51,7 +51,7 @@ export const useGroupChat = (groupId, mainuser, setRerender) => {
     } else {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/auth/groups/userRemovel/${mainuser[0].userId}/${groupId}`,
+          `https://localhost:5000/api/auth/groups/userRemovel/${mainuser[0].userId}/${groupId}`,
           {
             method: 'POST',
             headers: {

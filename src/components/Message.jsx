@@ -135,10 +135,10 @@ const Message = ({ message, friendObject, messageClasses, componentType }) => {
 
           return (
             <div key={index}>
-              {/* Render date tag for chat messages */}
+       
               {componentType === "chat" && renderDateTag(currentDateTag, previousDateTag)}
 
-              {/* Render the message */}
+           
               <div
                 className={`${messageClass} ${
                   (componentType === "chat" && msg.sender === mainuser[0].userId) ||
@@ -151,13 +151,13 @@ const Message = ({ message, friendObject, messageClasses, componentType }) => {
                 onContextMenu={(e) => handleMessageOptionsWrapper(msg, e)}
                 data-message-id={msg._id}
               >
-                {/* Pending indicator */}
+                
                 {msg.pending && <span className="pending-indicator">⏳</span>}
 
-                {/* Message menu */}
+                
                 {renderMessageMenu(msg)}
 
-                {/* Edit message input */}
+                
                 {isEditing && selectedMessage._id === msg._id && (
                   <div className={messageContentClass}>
                     <input value={editText} onChange={(e) => setEditText(e.target.value)} />
@@ -165,13 +165,13 @@ const Message = ({ message, friendObject, messageClasses, componentType }) => {
                   </div>
                 )}
 
-                {/* Message info (photo and timestamp) */}
+                
                 <div className={messageInfoClass}>
                   <img src={photoURL} alt="" />
                   <p>{formatMessageTimestamp(msg.timestamp)}</p>
                 </div>
 
-                {/* Message content (text, reactions, files) */}
+                
                 {renderMessageContent(msg)}
               </div>
             </div>

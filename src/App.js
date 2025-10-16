@@ -3,6 +3,7 @@ import React , { useEffect, useState } from 'react';
 import Register from "./pages/Register"
 import Login from "./pages/Login"
 import Home from "./pages/Home"
+import Welcome from "./pages/Welcome"
 import "./style.scss";
 import { BrowserRouter , Routes, Route } from 'react-router-dom';
 
@@ -10,6 +11,7 @@ import MyEdit from './components/MyEdit';
 import UserDetails from './pages/UserDetails';
 import Userspage from './pages/Userspage';
 import FriendPage from './components/FriendPage';
+import Friends from './components/Friends';
 import Mainpage from './components/Mainpage'
 //import Test from "./components/Test";
 import ProfilePage from "./components/ProfilePage";
@@ -25,10 +27,10 @@ import { useUser } from './components/UserContext';
 
 
 function App() {
-  const {isGroupChat, setIsGroupChat} = useUser();
+  const {seTheMainUser, isGroupChat, setIsGroupChat} = useUser();
  
 
-  const { seTheMainUser} = useUser();
+
 
   const handleFacebookLogin = (authResponse) => {
     const { userID, accessToken } = authResponse;
@@ -54,14 +56,14 @@ function App() {
 
      
     <Routes>
-
-        <Route path="/" element={<Home  isGroupChat={isGroupChat}  setIsGroupChat={setIsGroupChat}/>} />
+        <Route path="/" element={<Welcome />} />
+        <Route path="/home" element={<Home  isGroupChat={isGroupChat}  setIsGroupChat={setIsGroupChat}/>} />
         <Route path="login" element={<Login onLogin={handleFacebookLogin}/>} />
         <Route path="register" element={<Register />} />
         <Route  path="/userdetails/:userId" element={<UserDetails/>} />
         <Route  path="/userspage" element={<Userspage/>} />
         <Route path="/user/:uid" element={<MyEdit />} />
-        <Route path="/friends" element={<FriendPage />} />
+       
         <Route path="/main" element={<Mainpage />} />
       {/* <Route path="/Test" element={<Test />} /> */}
         <Route path="/profilepage" element={<ProfilePage />} />
@@ -70,6 +72,7 @@ function App() {
         <Route path="/verify-email-prompt" element={<VerifyEmailPrompt />} />
         <Route path="/verify-email" element={<VerifyEmail />}/>
         <Route path="/pass-reset-prompt" element={<ResetPasswordPrompt />}/>
+        <Route path="/friends" element={<Friends />} />
   
         <Route path="*" element={<NotFound />} />
     

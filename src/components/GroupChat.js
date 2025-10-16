@@ -51,7 +51,7 @@ const GroupChat = () => {
     };
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch('http://localhost:5000/api/auth/create-group', { 
+      const response = await fetch('https://localhost:5000/api/auth/create-group', { 
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

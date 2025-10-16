@@ -1,20 +1,21 @@
 import React, { useState } from 'react';
 import { useUser } from './UserContext';
 import { useNavigate, Link } from "react-router-dom";
-
+import Moon from "../img/moon.jpg";
 
 
 const Navbar = props => {
   
-  const { mainuser,socket, seTheMainUser } = useUser();
+  const { mainuser,socket, seTheMainUser,status,setStatus } = useUser();
   const navigate = useNavigate();
-  const [status, setStatus] = useState('online');
+ 
+  
 
-  const handleLogout = async () => {
+  const handleLogout =  async () => {
 
  
     try {
-      const response = await fetch('http://localhost:5000/api/auth/logout', {
+      const response = await fetch('https://localhost:5000/api/auth/logout', {
         method: 'POST',
         credentials: 'include', // Include cookies in the request
       });
@@ -44,15 +45,21 @@ const Navbar = props => {
   };
 
   return (
-    <div className='navbar'>
-      <span className='logo'>Lama Chat</span>
-      <div className='user'>
+    <div className='navsidecolumn'>
         {mainuser ? (
-          <>
-            <Link to={`/user/${mainuser[0].userId}`}>
+      <div className="profileCard">
+        <div className="profile-main">
+          <div className="avatar">
+             <Link to={`/user/${mainuser[0].userId}`}>
               <img src= {mainuser[0].photoURL} alt="" />
             </Link>
-            <span>{mainuser[0].displayName}</span>
+          </div>
+          <div className="meta">
+            <span className="name">{mainuser[0].displayName}</span>
+            <span className="small">Online</span>
+          </div>
+        </div>
+          <div className="status-pill">
             <select value={status} onChange={(e) => handleStatusChange(e.target.value)} className='status'>
               <option value="online">Online</option>
               <option value="away">Away</option>
@@ -60,13 +67,17 @@ const Navbar = props => {
               <option value="doNotDisturb">Do Not Disturb</option>
               <option value="offline">Offline</option>
             </select>
-          </>
+          </div>
+      </div>
         ) : (
           <span>Loading...</span>
         )}
-        <button onClick={handleLogout}>Logout</button>
-      </div>
-    </div>
+ 
+        <div className="buttonDiv">
+        <button class="logout" onClick={handleLogout}>Logout</button>
+        </div>
+        </div>
+    
   );
 };
 

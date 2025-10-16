@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import CryptoJS from 'crypto-js';
+import {  useUser } from '../../components/UserContext';
 
 const SECRET_PASS = "XkhZG4fW2t2W";
 
@@ -8,8 +9,10 @@ export const useMessageHandlers = (
   mainuser,
   selectedUser,
   actuallmessagesId,
-  setMessage
+  setMessage,
+  blockedByUsers
 ) => {
+
   const [triggersend, setTriggersend] = useState(false);
 
   const storeUnsentMessage = (text, fileURL) => {
@@ -51,6 +54,32 @@ export const useMessageHandlers = (
 
   const sendMessage = async (text, fileURL) => {
     if (!actuallmessagesId || !text.trim()) return;
+
+    if (selectedUser && 
+      selectedUser[0] && 
+      blockedByUsers && 
+      blockedByUsers?.includes(selectedUser[0].id)) {
+
+        console.log("here i am now in send message section")
+    
+    // Create a special "blocked" message to display in the chat
+    const blockedMessage = {
+      text: "This user has blocked you. Your message was not delivered.",
+      sender: mainuser[0].userId,
+      timestamp: new Date().toISOString(),
+      status: 'blocked', // Special status for styling
+      source: 'chat',
+      isBlockedMessage: true // Flag for special rendering
+    };
+    
+    // Add this message to the UI, but don't send it to the server
+    setMessage(prev => [...prev, blockedMessage]);
+    
+    // Also set an error message if the setter is available
+   
+    
+    return false; // Indicate message wasn't sent
+  }
 
     let messageStatus = 'sent';
     if (selectedUser && selectedUser[0]) {

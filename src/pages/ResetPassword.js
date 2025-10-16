@@ -14,7 +14,7 @@ const Resetpassword = () => {
     e.preventDefault();
     console.log('Submitting form with password:', password); // Log the password being submitted
     try {
-      await axios.post(`http://localhost:5000/api/auth/reset-password/${token}`, { password });
+      await axios.post(`https://localhost:5000/api/auth/reset-password/${token}`, { password });
       setMessage('Password has been reset.');
       navigate(`${process.env.REACT_APP_REDIRECT_BASE_URL}/login`);
     } catch (error) {

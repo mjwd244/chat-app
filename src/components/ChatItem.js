@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getStatusMessage } from '../utils/chatsutils/getStatusMessage'; // Import the utility function
+import { useClickOutside } from '../hooks/chatshooks/chatseffectsHandlers.js';
 
 export const ChatItem = ({
   chat,
@@ -12,9 +13,30 @@ export const ChatItem = ({
   setMessage,
   setSelectedFriends,
   handleSelectConversation,
-  unreadCounts
+  unreadCounts,
+  blockedUsers,
+  handleBlockUser,
+  handleUnblockUser,
+  isMenuVisible,
+  toggleMenu,
+  blockedByUsers
 }) => {
-  
+
+  useEffect(() => {
+    console.log('ChatItem useEffect triggered');
+    console.log('Current blockedByUsers:', blockedByUsers);
+    console.log('Current chat.friendId:', chat.friendId);
+    
+    if (blockedByUsers && chat.friendId) {
+      const isBlocked = blockedByUsers.includes(chat.friendId);
+      console.log(`Is ${chat.friendName} blocked:`, isBlocked);
+    }
+  }, [blockedByUsers, chat.friendId]);
+ 
+
+  const haveBlockedUser = blockedUsers && blockedUsers.includes(chat.friendId);
+  const isBlockedByUser = blockedByUsers && blockedByUsers.includes(chat.friendId);
+ 
   // Helper function to handle click events
   const handleClick = (e) => {
     const element = e.currentTarget;
@@ -36,38 +58,16 @@ export const ChatItem = ({
   };
  
 
-  useEffect(() => {
-    console.log('ChatItem Props:', {
-      chat,
-      isSelected,
-      unreadCounts,
-      highlightedUsers,
-      isBlackOverlay,
-    });
-  }, [chat, isSelected, unreadCounts, highlightedUsers, isBlackOverlay]);
-
-  useEffect(() => {
-    console.log('ChatItem Props:', { chat, isSelected, unreadCounts });
-  }, [chat, isSelected, unreadCounts]);
-
+ 
 
   // Helper function to render the user chat info
   const renderUserChatInfo = () => (
     <div className="userChatInfo">
-      <div className='userChatInfocolumn'>
-        <span>{chat.friendName}</span>
-        <img src={chat.photo} alt="" />
-        <span>{getStatusMessage(chat.status)}</span>
-        {isSelected[chat.friendId] && <span>Selected</span>}
-      </div>
-      <div className='userChatInforow'>
-        {unreadCounts && chat.friendId && unreadCounts[chat.friendId] > 0 && (
-          <div className="unread-badge">
-            {unreadCounts[chat.friendId]}
-            {console.log('Rendering badge for', chat.friendId, 'count:', unreadCounts[chat.friendId])}
-          </div>
-        )}
-      </div>
+
+     
+
+
+      
     </div>
   );
 
@@ -77,7 +77,68 @@ export const ChatItem = ({
       key={chat.friendId}
       onClick={handleClick}
     >
-      {renderUserChatInfo()}
+      <div className='userChatInfoandImg'>
+    <div className='userChatImgcolumn'>
+      {isBlockedByUser && (
+      <span className="block-tag blocked-by-tag">Blocked You</span>
+      )}
+      {haveBlockedUser && (
+        <span className="block-tag blocking-tag">Blocked</span>
+      )}
+       <img src={chat.photo} alt="" />
+    </div>
+
+    <div className='userChatInfocolumn'>
+        <span>{chat.friendName}</span>
+       
+        <span>{getStatusMessage(chat.status)}</span>
+        {isSelected[chat.friendId] && <span>Selected</span>}
+    </div>
+
+    </div>
+     
+      
+      <div className='extraoptionscolumn'>
+
+        <div className='absentmessagecontainer'>
+        {unreadCounts && chat.friendId && unreadCounts[chat.friendId] > 0 && (
+          <button className="unread-badge">
+            {unreadCounts[chat.friendId]}
+            {console.log('Rendering badge for', chat.friendId, 'count:', unreadCounts[chat.friendId])}
+          </button>
+        )}
+    
+        </div>
+
+      <div className='threedotsrow'>
+
+      <button className="menu-button" onClick={toggleMenu}>
+        …
+      </button>
+   
+      {isMenuVisible && (
+        <div className="menu-options">
+          <button
+            onClick={(e) => {
+              e.stopPropagation(); 
+              if (haveBlockedUser) {
+                handleUnblockUser(chat.friendId);
+              } else {
+                handleBlockUser(chat.friendId);
+              }
+              toggleMenu(); 
+            }}
+          >
+            {haveBlockedUser ? 'Unblock User' : 'Block User'}
+          </button> 
+        </div>
+      )}
+      
+        </div>
+          
+        </div>
+      
+  
     </div>
   );
 };

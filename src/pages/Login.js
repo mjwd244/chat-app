@@ -34,7 +34,7 @@ const Login = ({ onLogin }) => {
 
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/login', {
+      const response = await fetch('https://localhost:5000/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -57,9 +57,9 @@ const Login = ({ onLogin }) => {
         displayName: data.displayName,
         photoURL: data.photoURL,
       }]);
-if (socketReady && socket) {
-  socket.emit('userOnline', mainuser[0].userId);
-}
+//if (socketReady && socket) {
+ // socket.emit('userOnline', mainuser[0].userId);
+//}
       // Emit userOnline event after successful login
    
       navigate('/');

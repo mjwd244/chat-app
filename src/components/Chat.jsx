@@ -13,6 +13,7 @@ import { Detector } from "react-detect-offline";
 import { chatSocketListeners } from '../hooks/chathooks/chatSocketListeners';
 import { useMessageHandlers } from '../hooks/chathooks/useMessageHandlers';
 import { useGroupChat } from '../hooks/chathooks/useGroupChat';
+import NotificationsIcon from './NotificationsIcon';
 import CryptoJS from 'crypto-js';
 
 const SECRET_PASS = "XkhZG4fW2t2W"; // Add this at the top with other imports
@@ -20,7 +21,7 @@ const SECRET_PASS = "XkhZG4fW2t2W"; // Add this at the top with other imports
 const Chat = ({ onSearchChat, toggleBlackOverlay, isGroupChat, setIsGroupChat }) => {
     const { showAddFriend, setShowAddFriend } = useChat();
     const [inputValue, setInputValue] = useState('');
-    const { friend, setUnreadCounts, actuallmessagesId, mainuser, message, socket, socketReady, setMessage, selectedUser, setActuallMessageId, groupId, rerender, setRerender } = useUser();
+    const { friend, setUnreadCounts, actuallmessagesId, mainuser, message, socket, socketReady, setMessage, selectedUser, setActuallMessageId, groupId, rerender, setRerender,blockedUsers, setBlockedUsers,blockedByUsers,setBlockedByUsers,setNotifications} = useUser();
     const messageClasses = {
         message: 'message',
         messageInfo: 'messageInfo',
@@ -28,9 +29,21 @@ const Chat = ({ onSearchChat, toggleBlackOverlay, isGroupChat, setIsGroupChat })
         wholecontainer: 'messages'
     };
 
+    const isChatOpen = selectedUser && selectedUser.length > 0;
+    useEffect(() => {
+        console.log('Chat component useEffect triggered');
+        console.log('BlockedByUsers in Chat:', blockedByUsers);
+        
+        if (blockedByUsers && selectedUser.length > 0) {
+          const isBlocked = blockedByUsers.includes(selectedUser[0].id);
+          console.log(`Is selected user ${selectedUser[0].displayName} blocked:`, isBlocked);
+        }
+      }, [blockedByUsers, selectedUser]);
+      
+
     // Use custom hooks
-    chatSocketListeners({socket, socketReady, mainuser, selectedUser, actuallmessagesId, setMessage, message, setUnreadCounts});
-    const { storeUnsentMessage, sendStoredMessages, sendMessage, triggersend, setTriggersend } = useMessageHandlers(socket, mainuser, selectedUser, actuallmessagesId, setMessage);
+    chatSocketListeners({socket, socketReady, mainuser, selectedUser, actuallmessagesId, setMessage, message, setUnreadCounts,setBlockedByUsers,setBlockedUsers,setNotifications});
+    const { storeUnsentMessage, sendStoredMessages, sendMessage, triggersend, setTriggersend } = useMessageHandlers(socket, mainuser, selectedUser, actuallmessagesId, setMessage,blockedByUsers);
     const { showDropdown, setShowDropdown, buttonLabel, handleGroupDeletionOrExit } = useGroupChat(groupId, mainuser, setRerender);
 
     const handleSendWithConnectionCheck = (online, text, fileURL) => {
@@ -113,38 +126,30 @@ const Chat = ({ onSearchChat, toggleBlackOverlay, isGroupChat, setIsGroupChat })
                                                 </div>
                                             )}
                                         </div>
-                                        <img src={Delete} alt="" onClick={highlightFriendsForDeletion} />
+                                        <img src={Delete} alt="" onClick={highlightFriendsForDeletion} />        
+                                            <NotificationsIcon />
                                     </div>
                                 </div>
                                 {isGroupChat ? (
-                                    <GroupChat setIsGroupChat={setIsGroupChat} />
+                                    <GroupChat setIsGroupChat={setIsGroupChat}/>
                                 ) : (
                                     <>
                                         <Messages 
-                                            message={message} 
+                                            message={message}   
                                             friendObject={selectedUser} 
                                             messageClasses={messageClasses} 
                                             componentType={"chat"} 
+                                            isChatOpen={isChatOpen}
                                         />
                                         <Input
                                             inputValue={inputValue}
                                             setInputValue={setInputValue}
                                             onSend={(text, fileURL) => handleSendWithConnectionCheck(online, text, fileURL)}
                                         />
-                                        {showAddFriend && <AddFriend onSearchAdd={onSearchChat} />}
+                                        {showAddFriend && <AddFriend onSearchAdd={onSearchChat} />} 
                                     </>
                                 )}
-                                <div style={{
-                                    position: 'fixed',
-                                    bottom: '20px',
-                                    right: '20px',
-                                    padding: '10px',
-                                    backgroundColor: online ? '#4CAF50' : '#f44336',
-                                    color: 'white',
-                                    borderRadius: '4px'
-                                }}>
-                                    {online ? '🟢 Connected' : '🔴 Disconnected'}
-                                </div>
+                             
                             </>
                         );
                     }}

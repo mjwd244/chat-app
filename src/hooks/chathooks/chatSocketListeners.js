@@ -1,6 +1,8 @@
-import { useEffect } from 'react';
+import { useEffect,useRef } from 'react';
 import CryptoJS from 'crypto-js';
 import { playSound } from '../../utils/messageutils/notificationUtils';
+import {  useUser } from '../../components/UserContext';
+
 
 const SECRET_PASS = "XkhZG4fW2t2W";
 
@@ -13,10 +15,37 @@ export const chatSocketListeners = ({
   setMessage,
   message,  
   setUnreadCounts,
-
+  setBlockedUsers,
+  setBlockedByUsers,
+  setNotifications
 }) => {
+
+  
+  const blockedUsersRequestedRef = useRef(false);
+
+
+  const socketConnectedRef = useRef(false);
+
   useEffect(() => {
     if (!socket || !socketReady) return;
+
+    socket.on('connect', () => {
+      console.log('Socket connected!');
+      socketConnectedRef.current = true;
+      
+      // Request blocked users list whenever socket connects if user is logged in
+      if (mainuser && mainuser[0]) {
+        console.log('Requesting blocked users list after socket connection');
+        socket.emit('getBlockedByUsersList', {
+          userId: mainuser[0].userId
+        });
+      }
+    });
+    
+    socket.on('disconnect', () => {
+      console.log('Socket disconnected!');
+      socketConnectedRef.current = false;
+    });
 
     // Listen for user status updates
     socket.on('updateUserStatus', ({ userId, isOnline }) => {
@@ -114,10 +143,75 @@ export const chatSocketListeners = ({
       }
     });
 
+    socket.on('youHaveBeenBlocked', (data) => {
+      
+      const { blockerId } = data;
+      
+      // Add this user to your blockedByUsers array
+      setBlockedByUsers(prev => {
+        if (!prev.includes(blockerId)) {
+          return [...prev, blockerId];
+        }
+        return prev;
+      });
+    });
+
+    socket.on('youHaveBeenUnblocked', (data) => {
+     
+      const { unblockerId } = data;
+      
+      // Remove from blockedByUsers array
+      setBlockedByUsers(prev => prev.filter(id => id !== unblockerId));
+    });
+
+   
+
+    socket.on('blockedByUsersList', (data) => {
+      console.log('Raw received data:', data);
+      
+      // Set both arrays in one event
+      if (data.blockedByIds && Array.isArray(data.blockedByIds)) {
+        console.log('Setting blockedByUsers to:', data.blockedByIds);
+        setBlockedByUsers(data.blockedByIds);
+      }
+      
+     if (data.blockedIds && Array.isArray(data.blockedIds)) {
+        console.log('Setting blockedUsers to:', data.blockedIds);
+        setBlockedUsers(data.blockedIds);
+      }
+    });
+
+
     return () => {
+      socket.off('connect');
+      socket.off('disconnect');
       socket.off('updateUserStatus');
       socket.off('newUnreadMessage');
       socket.off('receiveMessage');
+      socket.off('youHaveBeenBlocked');   
+      socket.off('youHaveBeenUnblocked');
+      socket.off('blockedByUsersList');   
     };
   }, [socket, socketReady, mainuser, selectedUser, actuallmessagesId, message]);
+
+
+  useEffect(() => {
+    if (!socket || !socketReady || !mainuser || !mainuser[0]) return;
+    
+    console.log('Emitting getBlockedByUsersList');
+    socket.emit('getBlockedByUsersList', {
+      userId: mainuser[0].userId
+    });
+
+    // Add immediate console log of current state
+    
+}, [socket, socketReady, mainuser]);
+
+
+
+
+
+
+
+
 };

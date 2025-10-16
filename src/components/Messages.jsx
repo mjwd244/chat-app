@@ -3,7 +3,7 @@ import Message from "./Message"
 import styles from '../assets/Groupchat.module.css';
 import { useUser } from '../components/UserContext';
 
-const Messages = ({message ,friendObject,messageClasses ,componentType}) => {
+const Messages = ({message ,friendObject,messageClasses ,componentType,isChatOpen}) => {
 
 let messageClass;
 const { mainuser} = useUser();
@@ -21,7 +21,8 @@ const { mainuser} = useUser();
   return (
 
 
-    <div className={messageClass} >
+    <div className={isChatOpen ? `${messageClass} chat-open` : messageClass}>
+      
            <div className="startconversationTitel">
                 {Array.isArray(friendObject) && friendObject.length > 0 ? (
                   <p>Conversation between {friendObject[0].displayName} and {mainuser[0].displayName}</p>
@@ -32,7 +33,7 @@ const { mainuser} = useUser();
          
         <Message message={message} friendObject={friendObject}  messageClasses={messageClasses} componentType={componentType} /> 
        
-        
+       
     </div>
   )
 }

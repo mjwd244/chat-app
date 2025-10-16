@@ -97,24 +97,24 @@ const Home = ({ isGroupChat ,setIsGroupChat}) => {
    
   
 },[toggeluseeffect]);
+
   return (
+    <div className="app">
     <div className="home">
+
+      <div className='navbar'>
+        <a>Home</a>
+        <Link to="/friends" className={location.pathname === '/friends' ? 'active' : ''}>
+        Friends
+        </Link>
+        <a>groups</a>
+        <a>settings</a>
+        </div>
+       
+      
       <div className="container" onClick={() => settoogleUseeffect(!toggeluseeffect)}>
-        <div className='mainmenubar'></div>
-        <div className='sidebarmenu'>  
-          <Link to="/main">
-            <p>Main</p>
-          </Link>
-          <Link to="/friends">
-            <p>Friends</p>
-          </Link>
-          <Link to="/Test">
-            <p>Chat Groups</p>
-          </Link> 
-          <Link to="/profilepage">
-            <p>Profile Page</p>
-          </Link> 
-          </div>
+
+ 
         <Sidebar highlightedUsers={highlightedUsers} isBlackOverlay={isBlackOverlay}  setIsGroupChat={setIsGroupChat} />
        
         {showUserDetails ? (
@@ -131,6 +131,7 @@ const Home = ({ isGroupChat ,setIsGroupChat}) => {
           <span className="close-overlay" onClick={closeOverlay}>×</span>
         </div>
       )}
+    </div>
     </div>
   );
 };

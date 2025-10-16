@@ -24,26 +24,165 @@ export const UserProvider = ({ children }) => {
     return []; // Initialize as an empty array if no valid user is found
   });
 
+
   useEffect(() => {
     if (mainuser.length > 0) {
-      localStorage.setItem('mainuser', JSON.stringify(mainuser[0]));
-      const newSocket = getSocket();
-      setSocket(newSocket);
-      newSocket.emit('userOnline', mainuser[0].userId);
-      newSocket.on('connect', () => {
-        setSocketReady(true);
-      });
-    } else {                  
-      localStorage.removeItem('mainuser');
-      disconnectSocket();
-      setSocket(null);
+      try {
+        console.log("Initializing socket for user:", mainuser[0].userId);
+        const newSocket = getSocket();
+  
+        // Reset socketReady to false when initializing a new socket
+        setSocketReady(false);
+  
+        // Wait for the socket to be ready
+        newSocket.ready.then(() => {
+          console.log('Socket is ready');
+          setSocketReady(true);
+          // Emit once when ready (initial)
+          if (mainuser[0]?.userId) {
+            console.log('Emitting userOnline (ready) for', mainuser[0].userId);
+            newSocket.emit('userOnline', mainuser[0].userId);
+          }
+        }).catch((error) => {
+          console.error('Error waiting for socket to be ready:', error);
+        });
+  
+        // Always (re-)emit on connect/reconnect so server maps userId -> socketId
+        const onConnect = () => {
+          console.log('Socket connected:', newSocket.id);
+          if (mainuser[0]?.userId) {
+            console.log('Emitting userOnline (connect) for', mainuser[0].userId);
+            console.log('About to emit userOnline for', mainuser[0]?.userId, 'on socket', newSocket.id);
+            newSocket.emit('userOnline', mainuser[0].userId);
+          }
+        };
+        const onReconnect = (attempt) => {
+          console.log('Socket reconnected on attempt', attempt, 'id:', newSocket.id);
+          if (mainuser[0]?.userId) {
+            console.log('Emitting userOnline (reconnect) for', mainuser[0].userId);
+            console.log('About to emit userOnline for', mainuser[0]?.userId, 'on socket', newSocket.id);
+            newSocket.emit('userOnline', mainuser[0].userId);
+          }
+        };
+        const onDisconnect = (reason) => {
+          console.log('Socket disconnected:', reason);
+        };
+  
+        newSocket.on('connect', onConnect);
+        newSocket.on('reconnect', onReconnect);
+        newSocket.on('disconnect', onDisconnect);
+  
+        setSocket(newSocket);
+  
+        // Cleanup listeners when mainuser changes or component unmounts
+        return () => {
+          try {
+            newSocket.off('connect', onConnect);
+            newSocket.off('reconnect', onReconnect);
+            newSocket.off('disconnect', onDisconnect);
+          } catch (e) {
+            console.warn('Error cleaning up socket listeners:', e);
+          }
+        };
+      } catch (error) {
+        console.error('Error setting up socket:', error);
+      }
     }
-
-    return () => {
-      disconnectSocket();
-    };
   }, [mainuser]);
- 
+
+
+
+    useEffect(() => {
+    if (!socket || !socketReady) return;
+  
+    console.log('Setting up global friend request listeners');
+  
+    // Friend request notification listener
+    socket.on('newFriendRequest', (requestData) => {
+      console.log('New friend request received:', requestData);
+      console.log('Current notifications before adding:', notifications);
+      setNotifications(prev => {
+        const newNotifications = [...prev, {
+          type: 'friendRequest',
+          ...requestData,
+          timestamp: new Date()
+        }];
+        console.log('New notifications array:', newNotifications);
+        return newNotifications;
+      });
+    });
+
+  socket.on('friendRequestSent', (response) => {
+    if (response.success) {
+      setNotifications(prev => [
+        ...prev,
+        {
+          type: 'friendRequest',
+          status: 'pending',
+          toUserId: response.toUserId,
+          toUserName: response.toUserName,
+          toUserPhoto: response.toUserPhoto,
+          sentByMe: true,
+          timestamp: new Date()
+        }
+      ]);
+    }
+  });
+
+
+  
+    // Accept/Decline response listeners
+  socket.on('friendRequestAccepted', (data) => {
+    if (mainuser[0]?.userId === data.toUserId) {
+      // Recipient: remove notification and refresh friends
+      setNotifications(prev =>
+        prev.filter(notif =>
+          !(notif.type === 'friendRequest' && notif.fromUserId === data.fromUserId)
+        )
+      );
+      
+    } else if (mainuser[0]?.userId === data.fromUserId) {
+      // Sender: update notification and refresh friends
+      setNotifications(prev =>
+        prev.map(notif =>
+          notif.type === 'friendRequest' &&
+          notif.toUserId === data.toUserId &&
+          notif.status === 'pending'
+            ? { ...notif, status: 'accepted' }
+            : notif
+        )
+      );
+      
+    }
+  });
+
+  
+    socket.on('friendRequestDeclined', (data) => {
+      console.log('Friend request declined:', data);
+      // Remove from notifications when declined
+      setNotifications(prev => 
+        prev.filter(notif => 
+          !(notif.type === 'friendRequest' && notif.fromUserId === data.fromUserId)
+        )
+      );
+
+      
+    });
+  
+    return () => {
+      socket.off('newFriendRequest');
+      socket.off('friendRequestAccepted');
+      socket.off('friendRequestDeclined');
+      socket.off('friendRequestSent');
+    };
+  }, [socket, socketReady]);
+
+
+
+
+  
+const [notifications, setNotifications] = useState([]);
+const [showNotifications, setShowNotifications] = useState(false);
   const [friend, setFriends] = useState([]);
   const [selectedUser, setSelectedUser] = useState([]);
   const [message, setMessage] = useState([]);
@@ -57,6 +196,10 @@ export const UserProvider = ({ children }) => {
   const [isGroupChat, setIsGroupChat] =  useState(false); 
   const [showCreateGroup, setShowCreateGroup] = useState(false);
   const [unreadCounts, setUnreadCounts] = useState({});
+  const [blockedByUsers, setBlockedByUsers] = useState([]);
+  const [blockedUsers, setBlockedUsers] = useState([]);
+   const [status, setStatus] = useState('online');
+   const [firends2 , setFriends2] = useState([]); // Always an array
 
 
 
@@ -118,7 +261,19 @@ export const UserProvider = ({ children }) => {
     socket,
     socketReady,
     unreadCounts,
-    setUnreadCounts
+    setUnreadCounts,
+    blockedByUsers,
+    setBlockedByUsers,
+    blockedUsers,
+    setBlockedUsers,
+    status,
+    setStatus,
+     notifications,
+  setNotifications,
+  showNotifications,
+  setShowNotifications,
+  firends2,
+  setFriends2
   };
 
   const chatValue = {

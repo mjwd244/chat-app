@@ -13,6 +13,8 @@ const MessageStatus = ({ status }) => {
       return <span className={`${styles.messageStatus} ${styles.seen}`}>✓✓</span>;
     case 'pending':
       return <span className={styles.messageStatus}>⏳</span>;
+    case 'blocked':
+      return <span className={styles.messageStatus}>🚫</span>;
     default:
       return null;
   }

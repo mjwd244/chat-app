@@ -16,7 +16,7 @@ const FriendSearch = ({ onSearch }) => {
     if (searchTerm) {
       const fetchUsers = async () => {
         try {
-          const response = await fetch(`http://localhost:5000/api/auth/search-users?searchTerm=${searchTerm}&userId=${userId}`);
+          const response = await fetch(`https://localhost:5000/api/auth/search-users?searchTerm=${searchTerm}&userId=${userId}`);
           if (!response.ok) {
             throw new Error('Error fetching users');
           }
@@ -37,6 +37,7 @@ const FriendSearch = ({ onSearch }) => {
 
   return (
     <div className={FriendSearchCss.friendsearchcontainer}>
+
       <input
         type="text"
         placeholder="Enter friend's username"
@@ -44,9 +45,11 @@ const FriendSearch = ({ onSearch }) => {
         onChange={(e) => setSearchTerm(e.target.value)}
         className={FriendSearchCss.searchinput}
       />
+
       <button onClick={handleSearch} className={FriendSearchCss.searchbutton}>
         Search
       </button>
+
       <ul className={FriendSearchCss.searchresults}>
         {suggestedResults.map((user) => (
           <li key={user._id}>
@@ -57,6 +60,7 @@ const FriendSearch = ({ onSearch }) => {
           </li>
         ))}
       </ul>
+      
     </div>
   );
 };

@@ -68,7 +68,7 @@ const CreateGroup = ({ selectedFriends, onClose }) => {
       // Send the message to the backend to save in the database
       const token = localStorage.getItem('token');
       console.log(actuallmessagesId)
-      const response = await fetch(`http://localhost:5000/api/auth/groups/${actuallmessagesId}/messages`, {
+      const response = await fetch(`https://localhost:5000/api/auth/groups/${actuallmessagesId}/messages`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

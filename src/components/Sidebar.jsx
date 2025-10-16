@@ -8,6 +8,7 @@ import axios from 'axios';
 const Sidebar = ({highlightedUsers, isBlackOverlay,setIsGroupChat})  => {
   const { setGroupId,setShowCreateGroup,setMessage,groups,setGroups, mainuser, rerender ,setRerender} = useUser();
   const [showlistedgroups , setShowlistedgroups] = useState(false)
+    const [friendSearched, setFriendSearched] = useState('');
   
 
 
@@ -51,6 +52,7 @@ const Sidebar = ({highlightedUsers, isBlackOverlay,setIsGroupChat})  => {
 
   const handleToggleView = () => {
     setShowlistedgroups(true)
+    setIsGroupChat(true)
   };
   
   const handleToggleView1 = () => {
@@ -72,7 +74,7 @@ const Sidebar = ({highlightedUsers, isBlackOverlay,setIsGroupChat})  => {
     try {
       
       const token = localStorage.getItem('token'); // Assuming you use token-based authentication
-      const response = await axios.delete(`http://localhost:5000/api/auth/groups/${groupId}`, {
+      const response = await axios.delete(`https://localhost:5000/api/auth/groups/${groupId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -89,37 +91,86 @@ const Sidebar = ({highlightedUsers, isBlackOverlay,setIsGroupChat})  => {
   }
 
 
+   const groupsButtonStyle = {
+    padding: '10px 20px',
+    margin: '10px',
+    backgroundColor: '#7c4dff',
+    color: 'white',
+    border: 'none',
+    borderRadius: '8px',
+    cursor: 'pointer',
+    width: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '10px'
+  };
+
+
+
 
   return (
     <div className='sidebar'>
-          { showlistedgroups ? (
-            <div>
-              <button onClick={handleToggleView1}>Back to Friends</button>
-              <ul>
-                {Array.isArray(groups) && groups.length > 0 ? (
-                groups.map((group) => (
-                  <li key={group.id} onClick={() => handleGroupClick(group)} className={`${isBlackOverlay && showlistedgroups ? 'highlight' : ''}`}>{group.groupName}
-                                  {isBlackOverlay && showlistedgroups && (
-                  <button onClick={() => deleteGroup(group.id)}>Delete</button>
-                )}
-                  </li>
-                ))
-              ):(
-                
+      {showlistedgroups ? (
+        <div className='groups-container'>
+          <button 
+            style={{
+              ...groupsButtonStyle,
+              backgroundColor: '#6b42dd'
+            }} 
+            onClick={handleToggleView1}
+          >
+            ← Back to Friends
+          </button>
+          <div className='groups-list'>
+            {Array.isArray(groups) && groups.length > 0 ? (
+              groups.map((group) => (
+                <div 
+                  key={group.id} 
+                  className={`group-item ${isBlackOverlay && showlistedgroups ? 'highlight' : ''}`}
+                  onClick={() => handleGroupClick(group)}
+                >
+                  <span className="group-name">{group.groupName}</span>
+                  {isBlackOverlay && showlistedgroups && (
+                    <button 
+                      className="delete-group"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        deleteGroup(group.id);
+                      }}
+                    >
+                      Delete
+                    </button>
+                  )}
+                </div>
+              ))
+            ) : (
+              <div className="no-groups">
                 <p>No groups available</p>
-                )}
-              </ul>
-            </div>
-          ) : (
-        <div>
-            <button onClick={handleToggleView}>Open listedSidebarGroups</button>
-            <Navbar />
-            <Search  />
-            <Chats highlightedUsers={highlightedUsers} isBlackOverlay={isBlackOverlay} setIsGroupChat={setIsGroupChat}  />
+              </div>
+            )}
+          </div>
         </div>
-         )}
+      ) : (
+        <div>
+          <button 
+            style={groupsButtonStyle}
+            onClick={handleToggleView}
+          >
+            <span>👥</span> View Groups
+          </button>
+          <Navbar />
+          <Search friendSearched={friendSearched} setFriendSearched={setFriendSearched} />
+          <Chats 
+            highlightedUsers={highlightedUsers} 
+            isBlackOverlay={isBlackOverlay} 
+            setIsGroupChat={setIsGroupChat} 
+            friendSearched={friendSearched} 
+          />
+        </div>
+      )}
     </div>
-  )
+  );
 }
 
 export default Sidebar;

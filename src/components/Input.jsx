@@ -38,7 +38,7 @@ const Input = ({ inputValue, setInputValue, onSend }) => {
       formData.append('file', encryptedFile, file.name);
 
       try {
-        const response = await fetch('http://localhost:5000/upload', {
+        const response = await fetch('https://localhost:5000/upload', {
           method: 'POST',
           body: formData,
         });
